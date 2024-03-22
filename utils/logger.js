@@ -46,4 +46,4 @@ const formatMessage = (level, message) => {
   return `${now} ${level[color]} :: ${message} `;
 };
 
-exports.myLogger = new Logger();
+exports.logger = new Logger();
