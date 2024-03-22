@@ -1,3 +1,4 @@
+require("colors");
 const moment = require("moment");
 
 exports.timestamp = () => {
@@ -41,7 +42,8 @@ class Logger {
 
 const formatMessage = (level, message) => {
   const color = this.colorize(level);
-  return `${this.timestamp()} ${level[color]} :: ${message} `;
+  const now = this.timestamp();
+  return `${now} ${level[color]} :: ${message} `;
 };
 
 exports.myLogger = new Logger();

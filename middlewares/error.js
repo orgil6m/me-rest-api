@@ -1,4 +1,4 @@
-const { myLogger } = require("../utils/logger");
+const { logger } = require("../utils/logger");
 
 const errorHandler = (err, req, res, next) => {
   let error = {
@@ -30,7 +30,7 @@ const errorHandler = (err, req, res, next) => {
   error.statusCode = error.statusCode || 500;
   error.message = error.message || "An unexpected error occurred.";
 
-  myLogger.error(error.message);
+  logger.error(error.message);
 
   res.status(error.statusCode).json({
     success: false,

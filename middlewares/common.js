@@ -14,28 +14,16 @@ const limiter = rateLimit({
   max: 100,
 });
 
-// const useMiddlewares = (app) => {
-//   app.use(helmet());
-//   app.use(hpp());
-//   app.use(xssClean());
-//   app.use(mongoSanitize());
-//   app.use(cookieParser());
-//   app.use(express.json());
-//   app.use(limiter);
-//   app.use(corsOptions);
-//   app.use(loggerMiddleware);
-// };
+const securityMiddlewares = [helmet(), hpp(), xssClean(), mongoSanitize()];
 
-const middlewares = [
-  helmet(),
-  hpp(),
-  xssClean(),
-  mongoSanitize(),
+const utilMiddlewares = [
   cookieParser(),
   express.json(),
   limiter,
   corsOptions,
   loggerMiddleware,
 ];
+
+const middlewares = [...securityMiddlewares, ...utilMiddlewares];
 
 module.exports = middlewares;
