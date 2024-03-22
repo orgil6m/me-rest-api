@@ -1,41 +1,24 @@
-const express = require("express");
-const xss = require("xss-clean");
-const hpp = require("hpp");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
-const cookieParser = require("cookie-parser");
-const { host, port } = require("./config/config");
-const corsOptions = require("./utils/cors");
-const connectDB = require("./config/db");
-const logger = require("./utils/logger");
 require("colors");
+const express = require("express");
+const connectDB = require("./config/db");
+const middlewares = require("./middlewares/common");
+const errorHandler = require("./middlewares/error");
+const { host, port } = require("./config/config");
 
-// import Middlewares
-const errorHandler = require("./middleware/error");
+// import Routes
+const errorRoutes = require("./routes/error");
 
 const app = express();
 const URL = `${host}:${port}`;
 
-// Connect Mongoose/MongoDB
+// Connect to the Database
 // connectDB();
 
 // Middlewares
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
-app.use(logger);
-app.use(helmet());
-app.use(hpp());
-app.use(cookieParser());
-app.use(express.json());
-app.use(xss());
-app.use(corsOptions);
-app.use(mongoSanitize());
+app.use(middlewares);
 
-// Use Routes
+// Routes
+app.use("*", errorRoutes);
 app.use(errorHandler);
 
 const server = app.listen(port, () => {
@@ -43,8 +26,6 @@ const server = app.listen(port, () => {
 });
 
 process.on("unhandledRejection", (err, promise) => {
-  console.log(`Алдаа гарлаа : ${err.message}`);
-  server.close(() => {
-    process.exit(1);
-  });
+  console.error(`Unhandled Rejection: ${err.message}`.red);
+  server.close(() => process.exit(1));
 });

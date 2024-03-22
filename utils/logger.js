@@ -1,27 +1,47 @@
 const moment = require("moment");
 
-const logger = (req, res, next) => {
+exports.timestamp = () => {
   const now = moment().format("YYYY-MM-DD HH:mm:ss");
-  let method;
-  switch (req.method) {
-    case "GET":
-      method = req.method.green;
-      break;
-    case "POST":
-      method = req.method.yellow;
-      break;
-    case "PUT":
-      method = req.method.blue;
-      break;
-    case "DELETE":
-      method = req.method.red;
-      break;
-    default:
-      break;
-  }
-
-  console.log(`[${now.italic}] ${method} :: ${req.originalUrl}`);
-  next();
+  return `[${now.italic}]`;
 };
 
-module.exports = logger;
+exports.colorize = (method) => {
+  const colorMethodMap = {
+    get: "green",
+    SUCCESS: "green",
+    post: "yellow",
+    WARNING: "yellow",
+    put: "blue",
+    INFO: "blue",
+    delete: "red",
+    ERROR: "red",
+  };
+  return colorMethodMap[method];
+};
+
+class Logger {
+  constructor() {}
+
+  info(message) {
+    console.info(formatMessage("INFO", message));
+  }
+
+  error(message) {
+    console.error(formatMessage("ERROR", message));
+  }
+
+  success(message) {
+    console.log(formatMessage("SUCCESS", message));
+  }
+
+  warning(message) {
+    console.warn(formatMessage("WARNING", message));
+  }
+}
+
+const formatMessage = (level, message) => {
+  const color = this.colorize(level);
+  return `${this.timestamp()} ${level[color]} :: ${message} `;
+};
+
+exports.myLogger = new Logger();
