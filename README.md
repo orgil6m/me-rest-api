@@ -15,7 +15,8 @@ The ME-Rest-API is a REST API template designed for quick and scalable developme
    ```
 
 3. Set up environment variables: <br/>
-   Duplicate the sample.env file, rename it to .env, and customize your environment variables:
+
+   Duplicate the sample.env file, rename it to .env, and customize your environment variables
 
    ```javascript
    NODE_ENV=DEVELOPMENT
