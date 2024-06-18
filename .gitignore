@@ -1,2 +1,5 @@
 .env
+generators/
 node_modules/
+data/
+public/

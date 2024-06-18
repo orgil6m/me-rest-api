@@ -13,6 +13,12 @@ const errorHandler = (err, req, res, next) => {
     error.statusCode = 401;
   }
 
+  // JWT error : Token expired error
+  if (err.name === "TokenExpiredError") {
+    error.message = "Your session is not valid. Please log in again.";
+    error.statusCode = 401;
+  }
+
   // CastError: Invalid ID format
   if (err.name === "CastError") {
     error.message = "The provided identifier is not in the correct format.";
