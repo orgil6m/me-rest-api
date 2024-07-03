@@ -1,40 +1,32 @@
-const { logger } = require("../utils/logger");
-
 const errorHandler = (err, req, res, next) => {
-  let error = {
-    ...err,
-    message: err.message,
-    statusCode: err.statusCode,
-  };
+  const error = { ...err };
+  error.message = err.message;
 
-  // JWT authentication error
-  if (err.message === "jwt malformed") {
-    error.message = "Your session is not valid. Please log in again.";
+  if (error.message === "jwt malformed") {
+    error.message = "Та логин хийж байж энэ үйлдлийг хийх боломжтой...";
     error.statusCode = 401;
   }
 
-  // CastError: Invalid ID format
-  if (err.name === "CastError") {
-    error.message = "The provided identifier is not in the correct format.";
+  if (error.name === "CastError") {
+    error.message = "Энэ ID буруу бүтэцтэй ID байна!";
     error.statusCode = 400;
   }
-
-  // Handling Mongoose duplicate key errors (e.g., for unique email or number)
-  if (err.code === 11000) {
+  if (error.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    error.message = `An entry already exists with the same ${field}.`;
+    const value = err.keyValue[field];
+    let message = "";
+    if (field === "email") {
+      message = `${value} и-мейл хаягтай хэрэглэгч бүртгэлтэй байна.`;
+    } else if (field === "number") {
+      message = `${value} дугаартай хэрэглэгч бүртгэлтэй байна.`;
+    }
+    error.message = message;
     error.statusCode = 400;
   }
 
-  // Ensure there's a status code and message for all errors
-  error.statusCode = error.statusCode || 500;
-  error.message = error.message || "An unexpected error occurred.";
-
-  logger.error(error.message);
-
-  res.status(error.statusCode).json({
+  res.status(err.statusCode || 500).json({
     success: false,
-    message: error.message,
+    error: error,
   });
 };
 
