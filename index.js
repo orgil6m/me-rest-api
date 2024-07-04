@@ -3,22 +3,18 @@ const express = require("express");
 const connectDB = require("./config/db");
 const middlewares = require("./middlewares/common");
 const errorHandler = require("./middlewares/error");
-const { host, port } = require("./config/config");
 
-// import Routes
-const errorRoutes = require("./routes/error");
+const { host, port } = require("./config/env");
+const routes = require("./routes");
 
 const app = express();
 const URL = `${host}:${port}`;
 
-// Connect to the Database
+// Connect to MongoDB
 // connectDB();
 
-// Middlewares
 app.use(middlewares);
-
-// Routes
-app.use("*", errorRoutes);
+app.use(routes);
 app.use(errorHandler);
 
 const server = app.listen(port, () => {

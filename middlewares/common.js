@@ -6,7 +6,7 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const loggerMiddleware = require("./logger");
-const corsOptions = require("../utils/cors");
+const corsOptions = require("../lib/cors");
 
 // Rate limiting configuration
 const limiter = rateLimit({
